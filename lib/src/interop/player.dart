@@ -8,9 +8,16 @@ import 'package:js/js.dart';
 @JS('onYouTubeIframeAPIReady')
 external void set _onYouTubeIframeAPIReady(Function f);
 
+bool _isAlreadyLoaded = false;
 Stream<void> get onYoutubeReady {
   final _youtubeReadyController = StreamController<void>();
+  if (_isAlreadyLoaded) {
+    _youtubeReadyController.add(null);
+    _youtubeReadyController.close();
+    return _youtubeReadyController.stream;
+  }
   _onYouTubeIframeAPIReady = allowInterop((_) {
+    _isAlreadyLoaded = true;
     _youtubeReadyController.add(null);
     _youtubeReadyController.close();
   });
