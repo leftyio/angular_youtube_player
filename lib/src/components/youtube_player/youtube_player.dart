@@ -33,9 +33,7 @@ class YoutubePlayerComponent implements OnInit {
   @override
   void ngOnInit() async {
     await provider.init();
-    print('init');
     provider.onYoutubeReady.listen((_) {
-      print('ready');
       _player = Player(
         player,
         options: PlayerOptions(
