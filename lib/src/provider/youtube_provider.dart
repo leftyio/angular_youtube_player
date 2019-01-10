@@ -39,7 +39,6 @@ class YoutubeProvider {
     _isReady.then((_) {
       if (_isInit) {
         _youtubeReadyController.add(null);
-        return _youtubeReadyController.stream;
       }
     });
     return _ready ??= _youtubeReadyController.stream.asBroadcastStream();
