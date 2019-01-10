@@ -31,11 +31,28 @@ class PlayerOptions {
 @JS('YT.Player')
 class _Player {
   external _Player(dynamic id, [_PlayerOptions options]);
+
+  external void playVideo();
+
+  external void pauseVideo();
+
+  external void stopVideo();
 }
 
 class Player {
   _Player _playerInterop;
 
-  Player(dynamic id, {PlayerOptions options})
-      : _playerInterop = _Player(id, options._optionsInterop);
+  Player(
+    dynamic id, {
+    PlayerOptions options,
+  }) : _playerInterop = _Player(
+          id,
+          options._optionsInterop,
+        );
+
+  void play() => _playerInterop.playVideo();
+
+  void pause() => _playerInterop.pauseVideo();
+
+  void stop() => _playerInterop.stopVideo();
 }
