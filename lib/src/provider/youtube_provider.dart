@@ -6,7 +6,7 @@ import 'package:angular_youtube_player/src/utils/load_script.dart';
 class YoutubeProvider {
   static YoutubeProvider youtubeProvider;
 
-  Future<void> isReady;
+  Future<void> _isReady;
   bool _isInit = false;
   StreamController<void> _youtubeReadyController;
   Stream<void> _ready;
@@ -26,7 +26,7 @@ class YoutubeProvider {
 
   Future<void> init() async {
     final completer = Completer<void>();
-    isReady = completer.future;
+    _isReady = completer.future;
     onYouTubeIframeAPIReady = (_) {
       _isInit = true;
       _youtubeReadyController.add(null);
@@ -36,7 +36,7 @@ class YoutubeProvider {
   }
 
   Stream<void> get onYoutubeReady {
-    isReady.then((_) {
+    _isReady.then((_) {
       if (_isInit) {
         _youtubeReadyController.add(null);
         return _youtubeReadyController.stream;
