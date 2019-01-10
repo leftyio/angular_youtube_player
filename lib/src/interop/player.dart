@@ -1,28 +1,13 @@
 @JS()
 library youtube_player_interop;
 
-import 'dart:async';
-
 import 'package:js/js.dart';
 
 @JS('onYouTubeIframeAPIReady')
 external void set _onYouTubeIframeAPIReady(Function f);
 
-bool _isAlreadyLoaded = false;
-Stream<void> get onYoutubeReady {
-  final _youtubeReadyController = StreamController<void>();
-  if (_isAlreadyLoaded) {
-    _youtubeReadyController.add(null);
-    _youtubeReadyController.close();
-    return _youtubeReadyController.stream;
-  }
-  _onYouTubeIframeAPIReady = allowInterop((_) {
-    _isAlreadyLoaded = true;
-    _youtubeReadyController.add(null);
-    _youtubeReadyController.close();
-  });
-  return _youtubeReadyController.stream;
-}
+set onYouTubeIframeAPIReady(Function f) =>
+    _onYouTubeIframeAPIReady = allowInterop(f);
 
 @JS()
 @anonymous
@@ -45,12 +30,12 @@ class PlayerOptions {
 
 @JS('YT.Player')
 class _Player {
-  external _Player(String id, [_PlayerOptions options]);
+  external _Player(dynamic id, [_PlayerOptions options]);
 }
 
 class Player {
   _Player _playerInterop;
 
-  Player(String id, {PlayerOptions options})
+  Player(dynamic id, {PlayerOptions options})
       : _playerInterop = _Player(id, options._optionsInterop);
 }
