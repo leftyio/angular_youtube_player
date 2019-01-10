@@ -3,7 +3,7 @@ import 'package:angular_youtube_player/src/interop/player.dart';
 
 @Component(
   selector: 'youtube-player',
-  templateUrl: 'youtube_player.html',
+  template: '<div id="player"></div>',
 )
 class YoutubePlayerComponent implements OnInit {
   @Input()
