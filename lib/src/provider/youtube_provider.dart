@@ -11,12 +11,7 @@ class YoutubeProvider {
   StreamController<void> _youtubeReadyController;
   Stream<void> _ready;
 
-  factory YoutubeProvider() {
-    if (_youtubeSingleton == null) {
-      _youtubeSingleton = YoutubeProvider._();
-    }
-    return _youtubeSingleton;
-  }
+  factory YoutubeProvider() => _youtubeSingleton ??= YoutubeProvider._();
 
   YoutubeProvider._() {
     _youtubeReadyController = StreamController<void>(onListen: () {
