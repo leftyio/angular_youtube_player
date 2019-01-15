@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
@@ -11,7 +12,7 @@ import 'package:angular_youtube_player/src/provider/youtube_provider.dart';
     ClassProvider(YoutubeProvider),
   ],
 )
-class YoutubePlayerComponent implements OnInit {
+class YoutubePlayerComponent implements OnInit, OnDestroy {
   final YoutubeProvider provider;
 
   @Input()
@@ -27,13 +28,16 @@ class YoutubePlayerComponent implements OnInit {
   DivElement player;
 
   Player _player;
+  StreamSubscription<void> _onReadySubscription;
 
   YoutubePlayerComponent(this.provider);
 
   @override
   void ngOnInit() {
+    print('launch init');
     provider.init();
-    provider.onYoutubeReady.listen((_) {
+    _onReadySubscription = provider.onYoutubeReady.listen((_) {
+      print('youtube ready');
       _player = Player(
         player,
         options: PlayerOptions(
@@ -43,5 +47,10 @@ class YoutubePlayerComponent implements OnInit {
         ),
       );
     });
+  }
+
+  @override
+  void ngOnDestroy() {
+    _onReadySubscription.cancel();
   }
 }

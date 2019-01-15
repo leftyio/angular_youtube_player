@@ -4,7 +4,7 @@ import 'package:angular_youtube_player/src/interop/player.dart';
 import 'package:angular_youtube_player/src/utils/load_script.dart';
 
 class YoutubeProvider {
-  static YoutubeProvider youtubeProvider;
+  static YoutubeProvider _youtubeSingleton;
 
   Future<void> _isReady;
   bool _isInit = false;
@@ -12,12 +12,16 @@ class YoutubeProvider {
   Stream<void> _ready;
 
   factory YoutubeProvider() {
-    youtubeProvider ??= YoutubeProvider._();
-    return youtubeProvider;
+    if (_youtubeSingleton == null) {
+      print('create singleton');
+      _youtubeSingleton = YoutubeProvider._();
+    }
+    return _youtubeSingleton;
   }
 
   YoutubeProvider._() {
     _youtubeReadyController = StreamController<void>(onListen: () {
+      print(_isInit);
       if (_isInit) {
         _youtubeReadyController.add(null);
       }
@@ -25,14 +29,16 @@ class YoutubeProvider {
   }
 
   Future<void> init() async {
-    final completer = Completer<void>();
-    _isReady = completer.future;
-    onYouTubeIframeAPIReady = (_) {
-      _isInit = true;
-      _youtubeReadyController.add(null);
-      completer.complete(null);
-    };
-    await loadYoutubeIframApi();
+    if (_isReady == null) {
+      final completer = Completer<void>();
+      _isReady = completer.future;
+      onYouTubeIframeAPIReady = (_) {
+        _isInit = true;
+        _youtubeReadyController.add(null);
+        completer.complete(null);
+      };
+      await loadYoutubeIframApi();
+    }
   }
 
   Stream<void> get onYoutubeReady {
