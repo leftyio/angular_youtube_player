@@ -34,10 +34,8 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
 
   @override
   void ngOnInit() {
-    print('launch init');
     provider.init();
     _onReadySubscription = provider.onYoutubeReady.listen((_) {
-      print('youtube ready');
       _player = Player(
         player,
         options: PlayerOptions(

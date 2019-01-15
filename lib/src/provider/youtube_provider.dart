@@ -13,7 +13,6 @@ class YoutubeProvider {
 
   factory YoutubeProvider() {
     if (_youtubeSingleton == null) {
-      print('create singleton');
       _youtubeSingleton = YoutubeProvider._();
     }
     return _youtubeSingleton;
@@ -21,7 +20,6 @@ class YoutubeProvider {
 
   YoutubeProvider._() {
     _youtubeReadyController = StreamController<void>(onListen: () {
-      print(_isInit);
       if (_isInit) {
         _youtubeReadyController.add(null);
       }
