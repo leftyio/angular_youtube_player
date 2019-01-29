@@ -25,7 +25,7 @@ class YoutubeProvider {
     if (_isReady == null) {
       final completer = Completer<void>();
       _isReady = completer.future;
-      onYouTubeIframeAPIReady = (_) {
+      onYouTubeIframeAPIReady = () {
         _isInit = true;
         _youtubeReadyController.add(null);
         completer.complete(null);
