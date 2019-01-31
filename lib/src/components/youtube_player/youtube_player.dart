@@ -39,7 +39,7 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
   set videoId(String id) {
     _videoId = id;
 
-    _player?.loadVideoById(id);
+    _player?.cueVideoById(id);
   }
 
   @ViewChild('player')
