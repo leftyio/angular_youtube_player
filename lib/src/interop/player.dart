@@ -12,18 +12,21 @@ set onYouTubeIframeAPIReady(Function f) =>
 @JS()
 @anonymous
 class _PlayerOptions {
-  external String get height;
-  external String get width;
+  external int get height;
+  external int get width;
   external String get videoId;
 
-  external factory _PlayerOptions(
-      {String height, String width, String videoId});
+  external factory _PlayerOptions({
+    int height,
+    int width,
+    String videoId,
+  });
 }
 
 class PlayerOptions {
   _PlayerOptions _optionsInterop;
 
-  PlayerOptions({String width, String height, String videoId})
+  PlayerOptions({int width, int height, String videoId})
       : _optionsInterop =
             _PlayerOptions(width: width, height: height, videoId: videoId);
 }
@@ -37,6 +40,14 @@ class _Player {
   external void pauseVideo();
 
   external void stopVideo();
+
+  external void loadVideoById(
+    String id, [
+    num startSeconds,
+    String suggestedQuality,
+  ]);
+
+  external void setSize(int width, int height);
 }
 
 class Player {
@@ -55,4 +66,13 @@ class Player {
   void pause() => _playerInterop.pauseVideo();
 
   void stop() => _playerInterop.stopVideo();
+
+  void loadVideoById(
+    String id, {
+    num startSeconds,
+    String suggestedQuality,
+  }) =>
+      _playerInterop.loadVideoById(id, startSeconds, suggestedQuality);
+
+  void setSize(int width, int height) => _playerInterop.setSize(width, height);
 }

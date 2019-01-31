@@ -15,14 +15,32 @@ import 'package:angular_youtube_player/src/provider/youtube_provider.dart';
 class YoutubePlayerComponent implements OnInit, OnDestroy {
   final YoutubeProvider provider;
 
-  @Input()
-  String width;
+  int _width;
 
   @Input()
-  String height;
+  set width(int w) {
+    _width = w;
+
+    _player?.setSize(_width, _height);
+  }
+
+  int _height;
 
   @Input()
-  String videoId;
+  set height(int h) {
+    _height = h;
+
+    _player?.setSize(_width, _height);
+  }
+
+  String _videoId;
+
+  @Input()
+  set videoId(String id) {
+    _videoId = id;
+
+    _player?.loadVideoById(id);
+  }
 
   @ViewChild('player')
   DivElement player;
@@ -32,18 +50,20 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
 
   YoutubePlayerComponent(this.provider);
 
+  Player _initPlayer() => Player(
+        player,
+        options: PlayerOptions(
+          width: _width,
+          height: _height,
+          videoId: _videoId,
+        ),
+      );
+
   @override
   void ngOnInit() {
     provider.init();
     _onReadySubscription = provider.onYoutubeReady.listen((_) {
-      _player = Player(
-        player,
-        options: PlayerOptions(
-          width: width,
-          height: height,
-          videoId: videoId,
-        ),
-      );
+      _player = _initPlayer();
     });
   }
 
@@ -51,4 +71,10 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
   void ngOnDestroy() {
     _onReadySubscription.cancel();
   }
+
+  void play() => _player.play();
+
+  void pause() => _player.pause();
+
+  void stop() => _player.stop();
 }
