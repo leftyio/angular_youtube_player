@@ -47,6 +47,12 @@ class _Player {
     String suggestedQuality,
   ]);
 
+  external void cueVideoById(
+    String id, [
+    num startSeconds,
+    String suggestedQuality,
+  ]);
+
   external void setSize(int width, int height);
 }
 
@@ -73,6 +79,13 @@ class Player {
     String suggestedQuality,
   }) =>
       _playerInterop.loadVideoById(id, startSeconds, suggestedQuality);
+
+  void cueVideoById(
+    String id, {
+    num startSeconds,
+    String suggestedQuality,
+  }) =>
+      _playerInterop.cueVideoById(id, startSeconds, suggestedQuality);
 
   void setSize(int width, int height) => _playerInterop.setSize(width, height);
 }
