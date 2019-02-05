@@ -70,6 +70,7 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
   @override
   void ngOnDestroy() {
     _onReadySubscription.cancel();
+    _player?.dispose();
   }
 
   void play() => _player.play();

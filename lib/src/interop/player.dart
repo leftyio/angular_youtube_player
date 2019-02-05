@@ -54,6 +54,8 @@ class _Player {
   ]);
 
   external void setSize(int width, int height);
+
+  external void destroy();
 }
 
 class Player {
@@ -88,4 +90,6 @@ class Player {
       _playerInterop.cueVideoById(id, startSeconds, suggestedQuality);
 
   void setSize(int width, int height) => _playerInterop.setSize(width, height);
+
+  void dispose() => _playerInterop.destroy();
 }
