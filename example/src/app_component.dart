@@ -13,4 +13,8 @@ final appNgFactory = app.AppNgFactory;
     YoutubePlayerComponent,
   ],
 )
-class App {}
+class App {
+  void onReady(PlayerEvent event) {
+    event.target.play();
+  }
+}

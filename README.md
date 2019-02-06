@@ -1,4 +1,9 @@
-A sample command-line application.
+# Angular Youtube iframe component
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+### Example
+
+```html
+<youtube-player [width]="800"
+                [height]="600"
+                videoId="nGlh4SVrsFg"></youtube-player>
+```
