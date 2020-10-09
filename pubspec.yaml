@@ -1,7 +1,9 @@
 name: angular_youtube_player
 description: Angular component for Youtube Iframe API
-version: 0.1.1-alpha+3
+version: 0.1.1
 homepage: https://lefty.io/
+repository: https://github.com/leftyio/angular_youtube_player
+issue_tracker: https://github.com/leftyio/angular_youtube_player/issues
 authors: 
   - Kevin Segaud <segaud.kevin@gmail.com>
   - Hadrien Lejard <hadrien.lejard@gmail.com>
@@ -10,7 +12,7 @@ environment:
   sdk: ">=2.0.0 <3.0.0"
 
 dependencies:
-  angular: ^6.0.0-alpha+1
+  angular: ^6.0.0
   youtube_iframe_interop: ^0.1.0
 
 dev_dependencies:

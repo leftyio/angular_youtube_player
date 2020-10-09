@@ -1,4 +1,4 @@
-## 0.1.1-alpha+3
+## 0.1.1
 
 - Support angular 6
 
