@@ -15,6 +15,6 @@ final appNgFactory = app.AppNgFactory;
 )
 class App {
   void onReady(PlayerEvent event) {
-    event.target.play();
+    event.target.playVideo();
   }
 }

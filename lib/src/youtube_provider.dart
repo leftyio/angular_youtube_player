@@ -1,48 +1,30 @@
 import 'dart:async';
+import 'dart:js';
 
 import 'package:youtube_iframe_interop/youtube_iframe_interop.dart';
 
 class YoutubeProvider {
-  static YoutubeProvider _youtubeSingleton;
+  static final _instance = YoutubeProvider._();
 
-  Future<void> _isReady;
+  factory YoutubeProvider() => _instance;
+
+  YoutubeProvider._();
+
+
+  final _completer = Completer<void>();
+
   bool _isInit = false;
-  StreamController<void> _youtubeReadyController;
-  Stream<void> _ready;
-
-  factory YoutubeProvider() => _youtubeSingleton ??= YoutubeProvider._();
-
-  YoutubeProvider._() {
-    _youtubeReadyController = StreamController<void>.broadcast(onListen: () {
-      if (_isInit) {
-        _youtubeReadyController.add(null);
-      }
-    });
-  }
 
   Future<void> init() async {
-    if (_isReady == null) {
-      final completer = Completer<void>();
-      _isReady = completer.future;
-      onYouTubeIframeAPIReady = () {
-        _isInit = true;
-        _youtubeReadyController.add(null);
-        completer.complete(null);
-      };
-      await loadYoutubeIframApi();
-    }
+    if (_isInit) return onYoutubeReady;
+    _isInit = true;
+
+    onYouTubeIframeAPIReady = allowInterop(() => _completer.complete(null));
+
+    loadYoutubeIframeApi();
+
+    return onYoutubeReady;
   }
 
-  Stream<void> get onYoutubeReady {
-    if (_ready == null) {
-      _ready = _youtubeReadyController.stream;
-
-      _isReady.then((_) {
-        if (_isInit) {
-          _youtubeReadyController.add(null);
-        }
-      });
-    }
-    return _ready;
-  }
+  Future<void> get onYoutubeReady => _completer.future;
 }

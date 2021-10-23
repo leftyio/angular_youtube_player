@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:html';
+import 'dart:js';
 
 import 'package:angular/angular.dart';
 import 'package:youtube_iframe_interop/youtube_iframe_interop.dart';
@@ -11,6 +12,7 @@ import 'youtube_provider.dart';
   providers: [
     ClassProvider(YoutubeProvider),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 )
 class YoutubePlayerComponent implements OnInit, OnDestroy {
   final YoutubeProvider provider;
@@ -40,7 +42,7 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
   Stream<PlayerEvent> get onApiChange => _onApiChange.stream;
   final _onApiChange = StreamController<PlayerEvent>.broadcast();
 
-  int _width;
+  int _width = 0;
 
   @Input()
   set width(int w) {
@@ -49,7 +51,7 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
     _player?.setSize(_width, _height);
   }
 
-  int _height;
+  int _height = 0;
 
   @Input()
   set height(int h) {
@@ -58,7 +60,7 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
     _player?.setSize(_width, _height);
   }
 
-  String _videoId;
+  late String _videoId;
 
   @Input()
   set videoId(String id) {
@@ -68,31 +70,34 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('player')
-  DivElement player;
+  DivElement? playerElement;
 
-  Player _player;
-  StreamSubscription<void> _onReadySubscription;
+  Player? _player;
+  Player? get player => _player;
 
   YoutubePlayerComponent(this.provider);
 
   Player _initPlayer() => Player(
-        player,
-        options: PlayerOptions(
+        playerElement,
+        PlayerOptions(
           width: _width,
           height: _height,
           videoId: _videoId,
-          events: PlayerEvents(
-            onReady: _onReady.add,
+          events: Events(
+            onReady: allowInterop(_onReady.add),
+            onError: allowInterop(_onError.add),
+            onApiChange: allowInterop(_onApiChange.add),
+            onPlaybackQualityChange: allowInterop(_onPlaybackQualityChange.add),
+            onPlaybackRateChange: allowInterop(_onPlaybackRateChange.add),
+            onStateChange: allowInterop(_onStateChange.add),
           ),
         ),
       );
 
   @override
-  void ngOnInit() {
-    provider.init();
-    _onReadySubscription = provider.onYoutubeReady.listen((_) {
-      _player = _initPlayer();
-    });
+  Future<void> ngOnInit() async {
+    await provider.init();
+    _player = _initPlayer();
   }
 
   @override
@@ -103,14 +108,13 @@ class YoutubePlayerComponent implements OnInit, OnDestroy {
     _onPlaybackRateChange.close();
     _onError.close();
     _onApiChange.close();
-    _onReadySubscription.cancel();
-    _player?.dispose();
+    _player?.destroy();
     _player = null;
   }
 
-  void play() => _player.play();
+  void play() => _player?..playVideo();
 
-  void pause() => _player.pause();
+  void pause() => _player?.pauseVideo();
 
-  void stop() => _player.stop();
+  void stop() => _player?.stopVideo();
 }
