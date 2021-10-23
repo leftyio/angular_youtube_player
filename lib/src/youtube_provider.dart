@@ -10,7 +10,6 @@ class YoutubeProvider {
 
   YoutubeProvider._();
 
-
   final _completer = Completer<void>();
 
   bool _isInit = false;
